@@ -161,22 +161,25 @@
 			};
 
 			partition@360000 {
-				compatible = "nvmem-cells";
-				#address-cells = <1>;
-				#size-cells = <1>;
 				label = "0:ART";
 				reg = <0x00360000 0x00040000>;
 
-				macaddr_eth0: macaddr@0 {
-					reg = <0x0 0x6>;
-				};
+				nvmem-layout {
+					compatible = "fixed-layout";
+					#address-cells = <1>;
+					#size-cells = <1>;
 
-				macaddr_eth1: macaddr@6 {
-					reg = <0x6 0x6>;
-				};
+					macaddr_eth0: macaddr@0 {
+						reg = <0x0 0x6>;
+					};
 
-				macaddr_eth2: macaddr@c {
-					reg = <0xc 0x6>;
+					macaddr_eth1: macaddr@6 {
+						reg = <0x6 0x6>;
+					};
+
+					macaddr_eth2: macaddr@c {
+						reg = <0xc 0x6>;
+					};
 				};
 			};
 
@@ -220,6 +223,7 @@
 &dp5 {
 	status = "okay";
 
+	phy-mode = "sgmii";
 	phy-handle = <&qca8081>;
 	nvmem-cells = <&macaddr_eth2>;
 	nvmem-cell-names = "mac-address";
@@ -261,6 +265,8 @@
 		compatible = "ethernet-phy-id004d.d101";
 		reg = <24>;
 		reset-gpios = <&tlmm 77 GPIO_ACTIVE_LOW>;
+		reset-assert-us = <10000>;
+		reset-deassert-us = <50000>;
 	};
 };
 
@@ -312,6 +318,7 @@
 		nand-ecc-strength = <4>;
 		nand-ecc-step-size = <512>;
 		nand-bus-width = <8>;
+
 		partitions {
 			compatible = "fixed-partitions";
 			#address-cells = <1>;
